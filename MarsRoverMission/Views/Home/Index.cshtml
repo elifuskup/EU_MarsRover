@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "Home Page of Mars";
+}
+
+<div class="content">
+    <div style="text-align: center; margin-bottom: 30px;"><h1>Mission : Mars Rover</h1></div>
+    <div style="padding-bottom: 30px;" class="row">
+        <div id="div_form">
+            <div class="form-group">
+                <label>The upper-right coordinates of the plateau</label>
+                <input class="form-control" id="coordinates" name="coordinates" aria-describedby="coordHelp" placeholder="Enter coordinates">
+                <small id="coordHelp" class="form-text text-muted">The lower-left coordinates are assumed to be (0,0).</small>
+            </div>
+            <div class="form-group">
+                <label>1st rover’s position</label>
+                <input class="form-control" id="pos_r_1" name="pos_r_1" aria-describedby="pos_r_1Help" placeholder="Enter position">
+                <small id="pos_r_1Help" class="form-text text-muted">The position is made up of two integers and a letter separated by spaces, corresponding to the x and y co-ordinates and the rover’s orientation. (e.g., 1 2 N)</small>
+            </div>
+            <div class="form-group">
+                <label>1st rover’s movements</label>
+                <input class="form-control" id="move_r_1" name="move_r_1" aria-describedby="move_r_1Help" placeholder="Enter movements">
+                <small id="move_r_1Help" class="form-text text-muted">Series of instructions telling the rover how to explore the plateau. L : Left, R: Right, M : Move forward (e.g., LMLMLMLMM)</small>
+            </div>
+            <div class="form-group">
+                <label>2nd rover’s position</label>
+                <input class="form-control" id="pos_r_2" name="pos_r_2" aria-describedby="pos_r_2Help" placeholder="Enter position">
+                <small id="pos_r_2Help" class="form-text text-muted">The position is made up of two integers and a letter separated by spaces, corresponding to the x and y co-ordinates and the rover’s orientation. (e.g., 1 2 N)</small>
+            </div>
+            <div class="form-group">
+                <label>2nd rover’s position</label>
+                <input class="form-control" id="move_r_2" name="move_r_2" aria-describedby="move_r_2Help" placeholder="Enter movements">
+                <small id="move_r_2Help" class="form-text text-muted">Series of instructions telling the rover how to explore the plateau. L : Left, R: Right, M : Move forward (e.g., LMLMLMLMM)</small>
+            </div>
+            <button type="submit" class="btn btn-primary" onclick="InitializeRovers();">Send them to Mars</button>
+        </div>
+    </div>
+    <div class="row">
+        <div style="padding-bottom: 30px;" class="col-sm-6" id="rover_1">
+        </div>
+        <div class="col-sm-6" id="rover_2">
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+
+        var InitializeRovers = function () {
+            RenderRover('#rover_1', $('#pos_r_1').val(), $('#move_r_1').val());
+            RenderRover('#rover_2', $('#pos_r_2').val(), $('#move_r_2').val());
+        };
+
+        var RenderRover = function (roverDiv, position, movements) {
+            var data = {};
+            data.coordinates = $('#coordinates').val();
+            data.pos_r_1 = position;
+            data.move_r_1 = movements;
+
+            $.ajax({
+                type: "POST",
+                dataType: "html",
+                data: data,
+                url: "/Home/Rover",
+                error: function (err) {
+                    var a = 42;
+                },
+                success: function (data) {
+                    $(roverDiv).html(data);
+                }
+            });
+        };
+    </script>
+}

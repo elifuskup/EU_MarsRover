@@ -1,0 +1,33 @@
+﻿@model MarsRoverMission.Models.Rover
+
+@{
+    int x = @Model.MaxCoordinateX;
+    int y = @Model.MaxCoordinateY;
+    int nextline = y;
+    char seperator = ',';
+    int width_x = 40 * (x + 1);
+}
+@if (Model != null && x > 0 && y > 0)
+{
+    @for (int i = y; i >= 0; i--)
+    {
+        <div style="width: @width_x; padding-bottom: 5px;">
+            @for (int j = 0; j < x + 1; j++)
+            {
+                string divId = j.ToString() + seperator + i.ToString();
+                var result = Model.Moves.Where(k => k == divId).FirstOrDefault();
+
+                if (result != null)
+                {
+                    @Html.Raw("<div id=\"" + divId + "\"style=\"background-color: red; margin-right: 5px; width: 50px; height: 50px; display: inline-block;\">" + divId + "</div>");
+                }
+
+                if (result == null)
+                {
+                    @Html.Raw("<div id=\"" + divId + "\"style=\"background-color: grey; margin-right: 5px; width: 50px; height: 50px; display: inline-block;\">" + divId + "</div>");
+                }
+            }
+        </div>
+    }
+        <div style="padding-top: 30px;"><label>Final coordinates : @Model.positionX @Model.positionY @Model.directionName</label></div>
+}
